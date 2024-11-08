@@ -1,111 +1,73 @@
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Text, Alert, TouchableOpacity, Image } from 'react-native';
 import { Button } from '@/components/Button';
 import { useState } from 'react';
 
 export default function HomeScreen() {
-  const [currentNumber, setCurrentNumber] = useState<string>('0');
-  const [previousNumber, setPreviousNumber] = useState<string>(''); 
-  const [operation, setOperation] = useState<string>(''); 
-  const [operationHistory, setOperationHistory] = useState<string>(''); 
+  const [operationHistory, setOperationHistory] = useState<string>('0');
+  const [operationHistorya, setOperationHistorya] = useState<string>('');
   
   // Função para adicionar números
   const addNumber = (number: number) => {
-    if(currentNumber == '0'){
-      setCurrentNumber('');
-    }
-    setCurrentNumber(prev => prev + number.toString());
-  };
-
-  const addPoint = () => {
-    setCurrentNumber(prev => prev + '.')
+    setOperationHistory(`${operationHistory}${number.toString()}`);
   };
 
   // Função para selecionar a operação
   const selectOperation = (op: string) => {
-    if (currentNumber === '') return; 
-    setPreviousNumber(currentNumber);
-    setCurrentNumber('');
-    setOperation(op); 
-    setOperationHistory(`${previousNumber} ${op}`);
+    setOperationHistory(`${operationHistory}${op}`);
   };
 
   // Função para calcular o resultado
   const calculate = () => {
-    if (currentNumber === '' || previousNumber === '') return; 
     let result: number;
 
-    const prev = parseFloat(previousNumber);
-    const current = parseFloat(currentNumber);
-
-    switch (operation) {
-      case '+':
-        result = prev + current;
-        break;
-      case '-':
-        result = prev - current;
-        break;
-      case 'x':
-        result = prev * current;
-        break;
-      case '÷':
-        result = prev / current;
-        break;
-      case '%':
-        result = prev % current;
-        break;
-      default:
-        return;
-    }
-
-    setCurrentNumber(result.toString()); 
-    setOperationHistory(`${operationHistory} ${currentNumber}`);
-    setPreviousNumber('');
-    setOperation('');
+    result = eval(operationHistory)
+    setOperationHistorya(`${operationHistory}`)
+    setOperationHistory(`${result.toString()}`)
   };
 
   const clear = () => {
-    setCurrentNumber('0');
-    setPreviousNumber('');
-    setOperation('');
-    setOperationHistory('');
+    setOperationHistory('0');
+    setOperationHistorya('');
   };
 
   return (
     <View style={styles.divPrincipal}>
       <View style={styles.divPrimeira}>
-        <Text style={styles.conta}>{operationHistory}</Text>
-        <Text style={styles.resultado}>{currentNumber}</Text>
+        <Text style={styles.conta}>{operationHistorya}</Text>
+        <Text style={styles.resultado}>{operationHistory}</Text>
       </View>
       <View style={styles.divSegunda}>
         <View style={styles.linha}>
           <Button text='AC' colorText='white' colorBack='#C18DB2FF' onPress={clear} />
           <Button text='+/-' colorText='white' colorBack='#C18DB2FF' onPress={() => selectOperation('+/-')} />
           <Button text='%' colorText='white' colorBack='#C18DB2FF' onPress={() => selectOperation('%')} />
-          <Button text='÷' colorText='white' colorBack='#4B4B4BFF' onPress={() => selectOperation('÷')} />
+          <Button text='÷' colorText='white' colorBack='#4B4B4BFF' onPress={() => selectOperation('/')} />
         </View>
         <View style={styles.linha}>
-          <Button text='7' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(7)} />
-          <Button text='8' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(8)} />
-          <Button text='9' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(9)} />
-          <Button text='x' colorText='white' colorBack='#4B4B4BFF' onPress={() => selectOperation('x')} />
+          <Button text='7' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(7)} />
+          <Button text='8' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(8)} />
+          <Button text='9' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(9)} />
+          <Button text='x' colorText='white' colorBack='#4B4B4BFF' onPress={() => selectOperation('*')} />
         </View>
         <View style={styles.linha}>
-          <Button text='4' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(4)} />
-          <Button text='5' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(5)} />
-          <Button text='6' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(6)} />
+          <Button text='4' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(4)} />
+          <Button text='5' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(5)} />
+          <Button text='6' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(6)} />
           <Button text='-' colorText='white' colorBack='#4B4B4BFF' onPress={() => selectOperation('-')} />
         </View>
         <View style={styles.linha}>
-          <Button text='1' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(1)} />
-          <Button text='2' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(2)} />
-          <Button text='3' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(3)} />
+          <Button text='1' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(1)} />
+          <Button text='2' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(2)} />
+          <Button text='3' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(3)} />
           <Button text='+' colorText='white' colorBack='#4B4B4BFF' onPress={() => selectOperation('+')} />
         </View>
         <View style={styles.linha}>
-          <Button text='📱' colorText='white' colorBack='#69425AFF' onPress={() => selectOperation('sla')} />
-          <Button text='0' colorText='white' colorBack='#69425AFF' onPress={() => addNumber(0)} />
-          <Button text='.' colorText='white' colorBack='#69425AFF' onPress={() => addPoint()} />
-          <Button text='=' colorText='white' colorBack='#4B4B4BFF' onPress={calculate} />
+          <TouchableOpacity style={styles.button}  onPress={() => addNumber(1)}>
+            <Image source={require('../assets/images/calculadora.png')}></Image>
+          </TouchableOpacity>
+          <Button text='0' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(0)} />
+          <Button text='.' colorText='white' colorBack='#A35987FF' onPress={() => addNumber(0)} />
+          <Button text='=' colorText='white' colorBack='#4B4B4BFF' onPress={() => changeCalculator()} />
         </View>
       </View>
     </View>
@@ -118,6 +80,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#C18DB2FF",
     flex: 1
   },
+  button: {
+    padding: 10,
+    borderRadius: 128,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 72,
+    height: 72,
+    backgroundColor: "#A35987FF"
+  },
   divPrimeira: {
     backgroundColor: "#C18DB2FF",
     flex: 3,
@@ -128,7 +99,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   divSegunda: {
-    backgroundColor: "#D3D3D3FF",
+    backgroundColor: "#F4F4F4FF",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 0.3,
@@ -146,7 +117,8 @@ const styles = StyleSheet.create({
   resultado: {
     fontSize: 48,
     color: "white",
-    marginRight: 12
+    marginRight: 12,
+    maxWidth: "100%"
   },
   conta: {
     fontSize: 32,
